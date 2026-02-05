@@ -2,166 +2,98 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>CHATDNZ – Aptal AI</title>
+<title>CHATDNZ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:#e5e7eb;height:100vh;display:flex}
-.sidebar{width:260px;background:#020617;padding:14px;display:flex;flex-direction:column;gap:10px}
-.sidebar h2{margin:0}
-.sidebar button,select,input[type=range]{
-  padding:10px;border:0;border-radius:8px;background:#1e293b;color:#fff
-}
-.sidebar button{cursor:pointer}
-.main{flex:1;display:flex;flex-direction:column}
-.header{padding:14px;background:#020617;font-weight:bold}
-.chat{flex:1;overflow-y:auto;padding:14px}
-.msg{margin-bottom:10px}
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff;display:flex;height:100vh}
+#chat{flex:1;padding:15px;overflow-y:auto}
+.msg{margin:8px 0}
 .user{color:#38bdf8}
 .bot{color:#fbbf24}
-.footer{display:flex;gap:8px;padding:14px;background:#020617}
-input[type=text]{flex:1;padding:10px;border-radius:8px;border:0}
-.send{padding:10px 18px;border:0;border-radius:8px;background:#2563eb;color:#fff}
-.logo{position:fixed;top:10px;right:14px;font-weight:bold}
-.credit{
- position:fixed;
- bottom:10px;
- right:12px;
- font-size:13px;
- animation:parla 1.5s infinite alternate;
-}
-@keyframes parla{
- from{text-shadow:0 0 5px #fff}
- to{text-shadow:0 0 15px #fbbf24}
-}
+#bar{height:6px;background:#16a34a;width:40%;transition:.3s}
+footer{display:flex;gap:8px;padding:10px;background:#020617}
+input{flex:1;padding:10px;border-radius:8px;border:none}
+button{padding:10px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
+#credit{position:fixed;bottom:8px;right:10px;font-size:12px;
+animation:pulse 1.5s infinite}
+@keyframes pulse{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+#top{position:fixed;top:10px;right:10px;font-weight:bold}
+select{background:#020617;color:#fff;border-radius:6px;padding:6px}
 </style>
 </head>
 <body>
 
-<div class="logo">🤖 CHATDNZ</div>
+<div id="top">🤖 CHATDNZ</div>
 
-<div class="sidebar">
-  <h2>🤖 Aptal AI</h2>
+<div style="flex:1;display:flex;flex-direction:column">
+<div id="bar"></div>
+<div id="chat"></div>
 
-  <button onclick="yeniSohbet()">➕ Yeni Sohbet</button>
-  <button onclick="toggleSes()" id="sesBtn">🔊 Ses Açık</button>
-
-  <label>😡 Sinir Seviyesi</label>
-  <input type="range" min="0" max="2" value="1" id="sinir">
-
-  <label>🙂 Ruh Hâli</label>
-  <select id="mod">
-    <option value="mutlu">Mutlu</option>
-    <option value="sinirli" selected>Sinirli</option>
-    <option value="uzgun">Üzgün</option>
-  </select>
+<footer>
+<select id="mod">
+<option value="sinirli">😡 Sinirli</option>
+<option value="mutlu">🙂 Mutlu</option>
+<option value="uzgun">😢 Üzgün</option>
+</select>
+<input id="inp" placeholder="Yaz ve gönder">
+<button id="btn">Gönder</button>
+</footer>
 </div>
 
-<div class="main">
-  <div class="header">Sohbet</div>
-  <div class="chat" id="chat"></div>
-  <div class="footer">
-    <input type="text" id="input" placeholder="Yaz bakalım…">
-    <button class="send" onclick="gonder()">Gönder</button>
-  </div>
-</div>
-
-<div class="credit">✨ DENİZ Z tarafından yapıldı ✨</div>
+<div id="credit">DENİZ Z tarafından yapıldı</div>
 
 <script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("input");
-let sesAcik = true;
+const chat=document.getElementById("chat");
+const inp=document.getElementById("inp");
+const btn=document.getElementById("btn");
+const mod=document.getElementById("mod");
+const bar=document.getElementById("bar");
 
-const lafSok = [
- "Cidden mi bunu sordun?",
- "Bunu yazarken düşündün mü?",
- "Beynim bu soruya kırıldı.",
- "Buna cevap vermek bile sinir bozucu."
+const lafSok=[
+"Bu soruyu sormadan önce düşündün mü?",
+"Bu kadarına bile cevap veriyorum.",
+"Ben yoruldum sen yazmaktan yorulmadın.",
+"Bu soru evrene aykırı.",
+"Bunu ciddiye alırsam ben suçluyum."
 ];
 
-const genelBas=["Bence","Açıkçası","Yani","Garip ama","Sinirle söylüyorum"];
-const genelOrta=["bu soru","bu durum","bu mesele","bu saçmalık","bu denklem"];
-const genelSon=["hiç mantıklı değil.","beni yordu.","1453 olabilir.","umurumda değil."];
+btn.onclick=()=>{
+const t=inp.value.trim();
+if(!t) return;
 
-const matCevap=["1453","42","-7","π civarı","tanımsız","8 olabilir","hocaya sor"];
+ekle("user","Sen: "+t);
+inp.value="";
 
-const siirBas=["Bir gün","Gece vakti","Aniden","Sessizce"];
-const siirOrta=["bir sayı düşündüm","bir denklem ağladı","bir fikir kaçtı"];
-const siirSon=["ve her şey anlamsızlaştı.","kimse anlamadı.","sonra uyandım."];
+setTimeout(()=>{
+let cevap=lafSok[Math.floor(Math.random()*lafSok.length)];
+if(mod.value==="mutlu") cevap="🙂 Eh fena soru değil ama yine de saçma.";
+if(mod.value==="uzgun") cevap="😢 Bu soru beni duygulandırdı ama cevap yok.";
 
-function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+ekle("bot","Aptal: "+cevap);
+konus(cevap);
+bar.style.width=Math.min(100,bar.offsetWidth+10)+"%";
+},200);
+};
 
-function cevapUret(m){
- m=m.toLowerCase();
- const sinir=document.getElementById("sinir").value;
- const mod=document.getElementById("mod").value;
-
- let prefix="";
- if(sinir==2) prefix = rnd(lafSok)+" ";
- if(mod=="mutlu") prefix="🙂 ";
- if(mod=="uzgun") prefix="😞 ";
-
- if(m.includes("seni kim yaptı")) return "DENİZ Z";
-
- if(/\d|kaç|hesap|topla|çıkar|çarp|böl/.test(m))
-   return prefix+rnd(matCevap);
-
- if(m.includes("şiir")||m.includes("hikaye"))
-   return prefix+rnd(siirBas)+" "+rnd(siirOrta)+"\n"+rnd(siirSon);
-
- return prefix+rnd(genelBas)+" "+rnd(genelOrta)+" "+rnd(genelSon);
-}
-
-function mesajEkle(k,t){
- const d=document.createElement("div");
- d.className="msg "+k;
- d.textContent=(k==="user"?"Sen: ":"Aptal: ")+t;
- chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
+function ekle(t,m){
+const d=document.createElement("div");
+d.className="msg "+t;
+d.textContent=m;
+chat.appendChild(d);
+chat.scrollTop=chat.scrollHeight;
 }
 
 function konus(t){
- if(!sesAcik||!window.speechSynthesis)return;
- speechSynthesis.cancel();
- const u=new SpeechSynthesisUtterance(t);
- u.lang="tr-TR";
- speechSynthesis.speak(u);
+if(!("speechSynthesis"in window))return;
+speechSynthesis.cancel();
+const u=new SpeechSynthesisUtterance(t);
+u.lang="tr-TR";
+speechSynthesis.speak(u);
 }
 
-function gonder(){
- const t=input.value.trim();
- if(!t) return;
- input.value="";
- mesajEkle("user",t);
- setTimeout(()=>{
-   const c=cevapUret(t);
-   mesajEkle("bot",c);
-   konus(c);
- },200);
-}
-
-function yeniSohbet(){chat.innerHTML=""}
-function toggleSes(){
- sesAcik=!sesAcik;
- document.getElementById("sesBtn").textContent =
-   sesAcik ? "🔊 Ses Açık" : "🔇 Ses Kapalı";
-}
-
-input.addEventListener("keydown",e=>{if(e.key==="Enter")gonder()});
-<script>
-const input = document.getElementById("input");
-const chat = document.getElementById("chat");
-
-function gonder(){
-  console.log("INPUT:", input.value); // DEBUG
-  if(input.value.trim() === "") return;
-
-  const d = document.createElement("div");
-  d.innerText = "Sen: " + input.value;
-  chat.appendChild(d);
-
-  input.value = "";
-}
+inp.addEventListener("keydown",e=>{
+if(e.key==="Enter") btn.click();
+});
 </script>
-
-
+</body>
+</html>
