@@ -1,23 +1,4 @@
-function cevapUret(m){
-  m = m.toLowerCase();
-  const sinir = document.getElementById("sinirRange")?.value || 2;
-
-  if(m.includes("seni kim yaptı") || m.includes("kim yaptı seni") || m.includes("yaratıcın kim")){
-    return "DENİZ Z";
-  }
-
-  if(/\d|kaç|hesap|topla|çıkar|böl|çarp/.test(m)){
-    return randomMat();
-  }
-
-  if(m.includes("şiir") || m.includes("hikaye")){
-    return randomSiir();
-  }
-
-  let cevap = randomGenel();
-
-  if(sinir == 3) cevap = "Kes artık. " + cevap;
-  if(sinir == 1) cevap = "Neyse sakinim. " + cevap;
-
-  return cevap;
+if(sohbet.length === 0){
+  document.querySelector('.header').innerText =
+    "Sohbet: " + t.slice(0,20);
 }
