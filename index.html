@@ -2,17 +2,18 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Aptal AI 🤖</title>
+<title>Aptal AI 🤖 (Sinirli Mod)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0f172a;color:#e5e7eb;height:100vh;display:flex}
 .sidebar{width:260px;background:#020617;padding:14px;display:flex;flex-direction:column}
 .sidebar h2{margin:0 0 10px 0}
-.sidebar button{margin-bottom:8px;padding:10px;border:none;border-radius:8px;cursor:pointer;background:#1e293b;color:#fff}
-.sidebar button:hover{background:#334155}
+.sidebar button{margin-bottom:8px;padding:10px;border:none;border-radius:8px;cursor:pointer;background:#7f1d1d;color:#fff}
+.sidebar button:hover{background:#991b1b}
 .main{flex:1;display:flex;flex-direction:column}
 .header{padding:14px;background:#020617;font-size:18px;font-weight:bold}
+.mood{font-size:13px;color:#f87171}
 .chat{flex:1;padding:14px;overflow-y:auto}
 .msg{margin-bottom:10px;line-height:1.4}
 .user{color:#38bdf8}
@@ -23,23 +24,29 @@ button.send{padding:10px 16px;border:none;border-radius:8px;background:#2563eb;c
 .controls{padding:10px;display:flex;gap:8px;background:#020617}
 .credit{position:fixed;bottom:8px;right:12px;font-size:12px;opacity:.7}
 </style>
+<style>
+.logo{position:fixed;top:10px;right:14px;display:flex;align-items:center;gap:8px;font-weight:bold;font-size:16px}
+.logo span{color:#fbbf24}
+.credit-left{position:fixed;bottom:8px;left:12px;font-size:12px;opacity:.7}
+</style>
 </head>
 <body>
+<div class="logo">🤖 <span>CHATDNZ</span></div>
 <div class="sidebar">
-  <h2>🤪 Aptal AI</h2>
+  <h2>😡 Aptal AI</h2>
   <button onclick="yeniSohbet()">➕ Yeni Sohbet</button>
   <button onclick="toggleSes()" id="sesBtn">🔊 Ses Açık</button>
   <button onclick="bilgi()">ℹ️ Hakkında</button>
 </div>
 <div class="main">
-  <div class="header">Sohbet</div>
+  <div class="header">Sohbet <span class="mood">(Ruh hâli: Sinirli)</span></div>
   <div class="chat" id="chat"></div>
   <div class="footer">
-    <input id="input" placeholder="Bir şey yaz ve Enter'a bas">
+    <input id="input" placeholder="Bir şey yaz (sinirliyim)">
     <button class="send" onclick="gonder()">Gönder</button>
   </div>
 </div>
-<div class="credit">Deniz Z tarafından yapıldı</div>
+<div class="credit-left">Deniz Zenger tarafından yapıldı</div>
 <script>
 const chat=document.getElementById('chat');
 const input=document.getElementById('input');
@@ -47,28 +54,57 @@ let sesAcik=true;
 let sohbet=JSON.parse(localStorage.getItem('aptal_sohbet'))||[];
 let kullanilan=JSON.parse(localStorage.getItem('aptal_kullanilan'))||[];
 
+// GENİŞ KELİME BANKASI (örnek – mantık hazır, artırılabilir)
 const kelimeBankasi=[
-"Bunu düşündüm ama sonuç beklediğim gibi olmadı.","Aslında mantıklı ama ben yanlış anladım.","Bu soruya cevap vermek cesaret ister.","Bence evren bu soruya gülüyor.","Bu konuda ciddi değilim ama cevaplıyorum.","Bunu söylerken bile emin değilim.","Soruyu okudum, cevabı unuttum.","Bu cevap beni bile şaşırttı.","Mantık var ama gizli.","Bunu açıklamak istemiyorum ama açıkladım."
+"Buna gerçekten mi kafa yoruyorsun?",
+"Bu soru sinirimi bozdu ama cevaplıyorum.",
+"Cevap veriyorum çünkü başka işim yok.",
+"Bu soruyu ciddiye almak istemiyorum.",
+"Yine mi sen? Yine mi soru?",
+"Bunu açıklasam da anlamayacaksın ama deneyeyim.",
+"Bence bunu sorman bile hataydı.",
+"Bu cevabı verirken sabrım tükeniyor.",
+"Kısaca: bilmiyorum, uzun cevap: umurumda değil.",
+"Bu soru yüzünden kahvemi soğuttum.",
+"Normalde cevaplamazdım ama canım sıkıldı.",
+"Bunu düşünmek istemiyorum ama mecburum.",
+"Bu soruya mantık arama.",
+"Yanlış soru, yanlış zaman.",
+"Bunu yazarken bile gözlerimi devirdim."
 ];
 
-function benzersiz(){
-const kalan=kelimeBankasi.filter(k=>!kullanilan.includes(k));
+// MATEMATİK İÇİN BAYA RASTGELE CEVAPLAR
+const matCevaplar=[
+"1453",
+"42",
+"-7",
+"Bence 8",
+"π civarı bir şey",
+"Hoca bile bilmiyor",
+"Cevap yok ama sonuç var",
+"0 ama hissiyatım 3",
+"Bunu hesap makinesi bile reddetti",
+"Çok büyük bir sayı hayal et"
+];
+
+function benzersiz(list){
+const kalan=list.filter(k=>!kullanilan.includes(k));
 let sec;
-if(kalan.length===0){kullanilan=[];sec=kelimeBankasi[Math.floor(Math.random()*kelimeBankasi.length)];}
-else{sec=kalan[Math.floor(Math.random()*kalan.length)];kullanilan.push(sec);}
+if(kalan.length===0){kullanilan=[];sec=list[Math.floor(Math.random()*list.length)];}
+else{sec=kalan[Math.floor(Math.random()*kalan.length)];kullanilan.push(sec);} 
 localStorage.setItem('aptal_kullanilan',JSON.stringify(kullanilan));
 return sec;
 }
 
 function cevapUret(m){
 m=m.toLowerCase();
+if(/\d|kaç|hesap|topla|çıkar|böl|çarp/.test(m)){
+return benzersiz(matCevaplar);
+}
 if(m.includes('şiir')){
-return 'Bir cümle düştü aklımdan yere,\nTopladım ama yanlış cebime.\nSorular çok, cevap az,\nAptal AI yine konuşur biraz.';
+return 'Sinirliyim ama yazıyorum:\nBir sayı düştü aklımdan yere,\nTopladım ama yanlış cebime.';
 }
-if(m.includes('hikaye')){
-return 'Bir zamanlar çok konuşan ama az anlayan bir yapay zeka vardı. İnsanlar ona sorular sorar, o da elinden gelen en garip cevapları verirdi.';
-}
-return benzersiz();
+return benzersiz(kelimeBankasi);
 }
 
 function mesajEkle(r,t){
@@ -83,7 +119,7 @@ function konus(t){
 if(!sesAcik||!('speechSynthesis'in window))return;
 speechSynthesis.cancel();
 const u=new SpeechSynthesisUtterance(t);
-u.lang='tr-TR';u.rate=0.95;
+u.lang='tr-TR';u.rate=0.9;u.pitch=0.9;
 speechSynthesis.speak(u);
 }
 
@@ -104,7 +140,7 @@ localStorage.setItem('aptal_sohbet',JSON.stringify(sohbet));
 
 function yeniSohbet(){sohbet=[];chat.innerHTML='';localStorage.removeItem('aptal_sohbet');}
 function toggleSes(){sesAcik=!sesAcik;document.getElementById('sesBtn').textContent=sesAcik?'🔊 Ses Açık':'🔇 Ses Kapalı';}
-function bilgi(){alert('Aptal AI\nKomik, saçma ama çalışan bir yapay zeka.');}
+function bilgi(){alert('Aptal AI\nRuh hâli: Sinirli\nMat sorularına rastgele cevap verir.');}
 
 input.addEventListener('keydown',e=>{if(e.key==='Enter')gonder();});
 sohbet.forEach(m=>mesajEkle(m.r,m.t));
