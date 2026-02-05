@@ -54,24 +54,39 @@ let sesAcik=true;
 let sohbet=JSON.parse(localStorage.getItem('aptal_sohbet'))||[];
 let kullanilan=JSON.parse(localStorage.getItem('aptal_kullanilan'))||[];
 
-// GENİŞ KELİME BANKASI (örnek – mantık hazır, artırılabilir)
-const kelimeBankasi=[
-"Buna gerçekten mi kafa yoruyorsun?",
-"Bu soru sinirimi bozdu ama cevaplıyorum.",
-"Cevap veriyorum çünkü başka işim yok.",
-"Bu soruyu ciddiye almak istemiyorum.",
-"Yine mi sen? Yine mi soru?",
-"Bunu açıklasam da anlamayacaksın ama deneyeyim.",
-"Bence bunu sorman bile hataydı.",
-"Bu cevabı verirken sabrım tükeniyor.",
-"Kısaca: bilmiyorum, uzun cevap: umurumda değil.",
-"Bu soru yüzünden kahvemi soğuttum.",
-"Normalde cevaplamazdım ama canım sıkıldı.",
-"Bunu düşünmek istemiyorum ama mecburum.",
-"Bu soruya mantık arama.",
-"Yanlış soru, yanlış zaman.",
-"Bunu yazarken bile gözlerimi devirdim."
-];
+// === 1000+ GENEL SAÇMA / SİNİRLİ CEVAP ÜRETİCİ ===
+const kelimeBaslangic=["Bence","Açıkçası","Dürüst olayım","Yani","Garip ama","Sinirle söylüyorum","Mantıken","Teoride","Pratikte","Rüyamda bile"];
+const kelimeOrta=["bu soru","bu durum","bu mesele","senin yazdığın şey","bu problem","bu fikir","bu saçmalık","bu denklem","bu cümle","bu evren"];
+const kelimeSon=["hiç mantıklı değil.","beni yordu.","beynimi kapattı.","cevapsız kalmalıydı.","zaten yanlış.","fazla ciddiye alındı.","umurumda değil.","evrene aykırı.","zamansız.","beni sinirlendirdi."];
+
+function randomGenel(){
+ return kelimeBaslangic[Math.floor(Math.random()*kelimeBaslangic.length)]+" "+
+        kelimeOrta[Math.floor(Math.random()*kelimeOrta.length)]+" "+
+        kelimeSon[Math.floor(Math.random()*kelimeSon.length)];
+}
+
+// === 300 MATEMATİK RASTGELE CEVAP ===
+const matBas=["Cevap","Sonuç","Hesap","İşlem","Bu soru"];
+const matOrta=["muhtemelen","kesinlikle","yanlış ama","teorik olarak","evrensel olarak"];
+const matSon=["42","-7","1453","π civarı","tanımsız","çok büyük","çok küçük","yok","8 olabilir","bilinemez"];
+
+function randomMat(){
+ return matBas[Math.floor(Math.random()*matBas.length)]+" "+
+        matOrta[Math.floor(Math.random()*matOrta.length)]+" "+
+        matSon[Math.floor(Math.random()*matSon.length)];
+}
+
+// === 100 SAÇMA ŞİİR / HİKAYE ===
+const siirBas=["Bir gün","Gece vakti","Hiç yoktan","Aniden","Sessizce"];
+const siirOrta=["bir sayı düşündüm","bir algoritma ağladı","bir kelime yuvarlandı","bir denklem kaçtı","bir fikir tökezledi"];
+const siirSon=["ve her şey anlamsızlaştı.","ama cevap çıkmadı.","çünkü matematik sinirliydi.","ve şiir bozuldu.","sonra uyandım."];
+
+function randomSiir(){
+ return siirBas[Math.floor(Math.random()*siirBas.length)]+" "+
+        siirOrta[Math.floor(Math.random()*siirOrta.length)]+"
+"+
+        siirSon[Math.floor(Math.random()*siirSon.length)];
+}
 
 // MATEMATİK İÇİN BAYA RASTGELE CEVAPLAR
 const matCevaplar=[
